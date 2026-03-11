@@ -1,0 +1,59 @@
+# ==============================
+# CONFIGURACION GENERAL PROYECTO
+# ==============================
+
+project:
+  name: prediccion_demanda_supermercado
+  version: 1.0
+
+  authors:
+    - Juan Camilo Rodriguez
+    - William Olaya
+    - Erik Gonzales
+    - Juan Manuel Garzon
+    - Yeimer Macana
+          
+
+# ==============================
+# RUTAS DE DATOS
+# ==============================
+
+paths:
+  raw_data: data/raw/dataset_supermercado_colombia_50000.csv
+  processed_data: data/processed/ventas_limpias.csv
+  features_data: data/features/dataset_modelo.csv
+
+# ==============================
+# MODELO DE MACHINE LEARNING
+# ==============================
+
+model:
+  algorithm: xgboost
+  test_size: 0.2
+  random_state: 42
+
+# ==============================
+# CONFIGURACION DE KPIs
+# ==============================
+
+kpis:
+  inventory_rotation: true
+  expired_losses: true
+  promotion_impact: true
+
+# ==============================
+# REPORTES
+# ==============================
+
+reports:
+  save_figures: true
+  figures_path: reports/figures/
+  reports_path: reports/generated/
+
+# ==============================
+# DASHBOARD
+# ==============================
+
+dashboard:
+  enable: true
+  port: 8501
