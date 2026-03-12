@@ -9,6 +9,12 @@ def create_features(df):
     print("\nIniciando feature engineering...")
 
     # ==============================
+    # ASEGURAR TIPO FECHA
+    # ==============================
+
+    df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
+
+    # ==============================
     # FEATURES TEMPORALES
     # ==============================
 
@@ -26,25 +32,28 @@ def create_features(df):
 
     df["stock_vendido"] = df["stock_inicial"] - df["stock_final"]
 
-    # ratio de venta vs stock
-    df["ratio_venta_stock"] = df["cantidad_vendida"] / (df["stock_inicial"] + 1)
+    # evitar division por cero
+    df["ratio_venta_stock"] = df["cantidad_vendida"] / (df["stock_inicial"].replace(0, 1))
 
     # ==============================
     # FEATURES DE PROMOCIONES
     # ==============================
 
+    # limpiar posibles espacios
+    df["promocion"] = df["promocion"].str.strip()
+
     df["tiene_promocion"] = df["promocion"].apply(
         lambda x: 0 if x == "Sin promoción" else 1
     )
 
-    # descuento en porcentaje real
+    # descuento real
     df["descuento_real"] = df["precio_unitario_cop"] - df["precio_final_cop"]
 
     # ==============================
     # FEATURES FINANCIERAS
     # ==============================
 
-    df["margen_por_producto"] = df["margen_ganancia"] / (df["cantidad_vendida"] + 1)
+    df["margen_por_producto"] = df["margen_ganancia"] / (df["cantidad_vendida"].replace(0, 1))
 
     print("Feature engineering completado")
 

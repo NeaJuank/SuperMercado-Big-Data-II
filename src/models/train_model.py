@@ -67,8 +67,7 @@ def train_model(df, config):
     predictions = model.predict(X_test)
 
     mae = mean_absolute_error(y_test, predictions)
-    rmse = mean_squared_error(y_test, predictions, squared=False)
-
+    rmse = mean_squared_error(y_test, predictions) ** 0.5
     print("\nEvaluación del modelo")
     print("MAE:", round(mae, 2))
     print("RMSE:", round(rmse, 2))
