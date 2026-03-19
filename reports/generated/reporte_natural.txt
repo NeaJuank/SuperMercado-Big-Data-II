@@ -1,0 +1,19 @@
+Reporte de resultados - Sistema de Predicción de Demanda
+===============================================
+
+Registros procesados: 50000
+
+Resumen de KPIs:
+- rotation: 11352.0377 (Meta: 0.80) -> CUMPLE
+  Recomendación: Mantener ritmo de reposición actual
+- expired_loss: 0.0068 (Meta: 0.05) -> CUMPLE
+  Recomendación: Continuar con niveles de inventario actuales
+- promotion_impact: -0.1959 (Meta: 0.15) -> NO CUMPLE
+  Recomendación: Revisar promociones y canales si incremento es bajo
+
+Primeras predicciones futuras:
+  2026-01-01 00:00:00 - Arroz 1kg en Barranquilla: 9.03 unidades
+  2026-01-02 00:00:00 - Arroz 1kg en Barranquilla: 9.03 unidades
+  2026-01-03 00:00:00 - Arroz 1kg en Barranquilla: 9.03 unidades
+  2026-01-04 00:00:00 - Arroz 1kg en Barranquilla: 9.03 unidades
+  2026-01-05 00:00:00 - Arroz 1kg en Barranquilla: 9.03 unidades

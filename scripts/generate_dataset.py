@@ -3,139 +3,118 @@ import numpy as np
 import random
 from datetime import datetime, timedelta
 
-# Número de registros
-n = 50000
+n = 60000
 
-# Productos con rangos de precios en COP
 productos = [
-("Arroz 1kg","Granos","Diana",3500,5200),
-("Leche Entera 1L","Lácteos","Alquería",3200,4800),
-("Huevos Docena","Huevos","Kikes",9000,14000),
-("Pan Tajado","Panadería","Bimbo",4500,7000),
-("Aceite Vegetal 1L","Despensa","Premier",9000,14000),
-("Azúcar 1kg","Despensa","Incauca",3200,5200),
-("Café Molido 500g","Bebidas","Juan Valdez",12000,22000),
-("Gaseosa 1.5L","Bebidas","Coca-Cola",4500,7500),
-("Pollo Entero kg","Carnes","Mac Pollo",9000,14000),
-("Carne Res kg","Carnes","Frigorífico",18000,32000),
-("Banano kg","Frutas","Genérico",1800,3500),
-("Manzana kg","Frutas","Genérico",4500,8500),
-("Papa kg","Verduras","Genérico",1500,3500),
-("Tomate kg","Verduras","Genérico",2000,4500),
-("Queso Campesino 500g","Lácteos","Colanta",7000,12000),
-("Yogurt 1L","Lácteos","Alpina",5000,9000),
-("Chocolate Mesa","Despensa","Corona",3500,6500),
-("Atún Lata","Enlatados","Van Camps",4500,7500),
-("Galletas","Snacks","Noel",2500,5500),
-("Jugo Hit 1L","Bebidas","Postobón",3500,6000)
+    ("LEC-000001", "Leche Entera 1L", "Lácteos", "Alquería", 3200, 4800),
+    ("POL-000002", "Pollo Entero kg", "Carnes", "Mac Pollo", 9000, 14000),
+    ("CAR-000003", "Carne Res kg", "Carnes", "Frigorífico", 18000, 32000),
+    ("ARZ-000004", "Arroz 1kg", "Granos", "Diana", 3500, 5200),
+    ("GAS-000005", "Gaseosa 1.5L", "Bebidas", "Coca-Cola", 4500, 7500),
+    ("YOG-000006", "Yogurt 1L", "Lácteos", "Alpina", 5000, 9000),
+    ("PAN-000007", "Pan Tajado", "Panadería", "Bimbo", 4500, 7000),
+    ("CAF-000008", "Café Molido 500g", "Bebidas", "Juan Valdez", 12000, 22000),
+    ("FOO-000009", "Aceite Vegetal 1L", "Despensa", "Premier", 9000, 14000),
+    ("TOM-000010", "Tomate kg", "Verduras", "Genérico", 2000, 4500),
 ]
 
-promociones = [
-"Sin promoción",
-"Descuento 10%",
-"Descuento 20%",
-"2x1",
-"Combo"
-]
+promociones = ["Sin promoción", "Descuento 10%", "Descuento 20%", "2x1", "Combo"]
+ciudades = ["Bogotá", "Medellín", "Cali", "Barranquilla", "Bucaramanga"]
+sucursales = ["Centro", "Norte", "Sur", "Occidente", "Oriente"]
 
-ciudades = [
-"Bogotá",
-"Medellín",
-"Cali",
-"Barranquilla",
-"Bucaramanga"
-]
-
-sucursales = [
-"Centro",
-"Norte",
-"Sur",
-"Occidente",
-"Oriente"
-]
-
-start = datetime(2024,1,1)
-end = datetime(2025,12,31)
-dias = (end-start).days
+start = datetime(2024, 1, 1)
+end = datetime(2025, 12, 31)
+dias = (end - start).days
 
 data = []
 
-for i in range(n):
+def random_dirty_row(base):
+    bad = base.copy()
+    error = random.choice([
+        "fecha_invalida",
+        "precio_invalido",
+        "cantidad_invalida",
+        "descuento_fuera_de_rango",
+        "stock_negativo",
+        "ciudad_invalida",
+        "categoria_invalida",
+    ])
+    if error == "fecha_invalida":
+        bad["fecha_venta"] = "32/13/2023"
+    if error == "precio_invalido":
+        bad["precio_venta"] = -100
+    if error == "cantidad_invalida":
+        bad["cantidad_vendida"] = 0
+    if error == "descuento_fuera_de_rango":
+        bad["descuento_pct"] = 150
+    if error == "stock_negativo":
+        bad["stock_disponible"] = -5
+    if error == "ciudad_invalida":
+        bad["ciudad"] = "CiudadX"
+    if error == "categoria_invalida":
+        bad["categoria"] = "DESCONOCIDA"
+    return bad, error
 
-    producto = random.choice(productos)
-    fecha = start + timedelta(days=random.randint(0,dias))
-
-    precio = random.randint(producto[3],producto[4])
-    cantidad = np.random.poisson(8)+1
-
+for i in range(50000):
+    prod = random.choice(productos)
+    fecha = start + timedelta(days=random.randint(0, dias))
+    precio = random.randint(prod[4], prod[5])
+    cantidad = np.random.poisson(8) + 1
     promo = random.choice(promociones)
-
-    descuento = 0
+    descuento_pct = 0
     if promo == "Descuento 10%":
-        descuento = 0.10
+        descuento_pct = 10
     elif promo == "Descuento 20%":
-        descuento = 0.20
+        descuento_pct = 20
     elif promo == "2x1":
-        descuento = 0.50
-
-    precio_final = int(precio*(1-descuento))
-
-    stock_inicial = random.randint(20,120)
-    stock_final = max(stock_inicial - cantidad,0)
-
-    ingreso = cantidad * precio_final
-
-    margen = ingreso * random.uniform(0.12,0.30)
-
-    perdida = 0
-    if random.random() < 0.02:
-        perdida = random.randint(1,5)*precio_final
-
+        descuento_pct = 50
+    precio_venta = int(precio * (1 - (descuento_pct / 100)))
+    stock_inicial = random.randint(20, 120)
+    stock_disponible = max(stock_inicial - cantidad, 0)
+    ingreso = cantidad * precio_venta
+    margen_ganancia = ingreso * random.uniform(0.12, 0.30)
+    dias_hasta_vencimiento = random.randint(1, 60)
+    perdida_vencimiento = 0 if random.random() > 0.02 else random.randint(1, 5) * precio_venta
     ciudad = random.choice(ciudades)
     sucursal = random.choice(sucursales)
 
-    data.append([
-        producto[0],
-        producto[1],
-        producto[2],
-        fecha,
-        cantidad,
-        precio,
-        precio_final,
-        promo,
-        descuento,
-        fecha.strftime("%A"),
-        sucursal,
-        ciudad,
-        stock_inicial,
-        stock_final,
-        ingreso,
-        margen,
-        perdida
-    ])
+    row = {
+        "producto_id": prod[0],
+        "producto": prod[1],
+        "categoria": prod[2],
+        "marca": prod[3],
+        "fecha_venta": fecha.strftime("%Y-%m-%d"),
+        "cantidad_vendida": cantidad,
+        "precio_unitario_cop": precio,
+        "precio_venta": precio_venta,
+        "promocion": promo,
+        "descuento_pct": descuento_pct,
+        "dia_semana": fecha.strftime("%A"),
+        "sucursal": sucursal,
+        "ciudad": ciudad,
+        "stock_inicial": stock_inicial,
+        "stock_disponible": stock_disponible,
+        "ingresos": ingreso,
+        "margen_ganancia": margen_ganancia,
+        "dias_hasta_vencimiento": dias_hasta_vencimiento,
+        "perdida_vencimiento": perdida_vencimiento,
+        "_es_sucio": False,
+        "_error_tipo": ""
+    }
+    data.append(row)
 
-columnas = [
-"producto",
-"categoria",
-"marca",
-"fecha",
-"cantidad_vendida",
-"precio_unitario_cop",
-"precio_final_cop",
-"promocion",
-"descuento_pct",
-"dia_semana",
-"sucursal",
-"ciudad",
-"stock_inicial",
-"stock_final",
-"ingreso_total",
-"margen_ganancia",
-"perdida_vencimiento"
-]
+for i in range(10000):
+    base = random.choice(data)
+    row = base.copy()
+    row["_es_sucio"] = True
+    row["_error_tipo"] = "registro_sucio"
+    dirty, err = random_dirty_row(row)
+    dirty["_es_sucio"] = True
+    dirty["_error_tipo"] = err
+    data.append(dirty)
 
-df = pd.DataFrame(data, columns=columnas)
+random.shuffle(data)
 
-df.to_csv("dataset_supermercado_colombia_50000.csv", index=False)
-
-print("Dataset generado correctamente")
+df = pd.DataFrame(data)
+df.to_csv("dataset_supermercado_colombia_60000.csv", index=False)
+print("Dataset generado correctamente con 60,000 registros (incluyendo sucios)")

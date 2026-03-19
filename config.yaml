@@ -40,6 +40,17 @@ kpis:
   inventory_rotation: true
   expired_losses: true
   promotion_impact: true
+  goals:
+    rotation_min: 0.8
+    expired_loss_max: 0.05
+    promotion_increase_min: 0.15
+
+# ==============================
+# DATA WAREHOUSE
+# ==============================
+
+warehouse:
+  db_path: data/warehouse/data_warehouse.db
 
 # ==============================
 # REPORTES
@@ -49,6 +60,9 @@ reports:
   save_figures: true
   figures_path: reports/figures/
   reports_path: reports/generated/
+  natural_report_path: reports/generated/reporte_natural.txt
+  kpis_csv: reports/generated/kpis_estado.csv
+  predictions_csv: reports/generated/predicciones_futuras.csv
 
 # ==============================
 # DASHBOARD

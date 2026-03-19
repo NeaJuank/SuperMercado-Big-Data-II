@@ -1,0 +1,4 @@
+kpi,valor,meta,cumple,brecha,recomendacion
+rotation,11352.03769250793,0.8,True,11351.237692507932,Mantener ritmo de reposición actual
+expired_loss,0.006797289696710344,0.05,True,-0.04320271030328966,Continuar con niveles de inventario actuales
+promotion_impact,-0.19590965249481013,0.15,False,-0.3459096524948101,Revisar promociones y canales si incremento es bajo
